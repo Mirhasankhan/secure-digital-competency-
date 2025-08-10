@@ -1,16 +1,7 @@
-export type TCart = {
-  _id: string;
-  productName: string;
-  sellerEmail: string;
-  buyerEmail: string;
-  image: {
-    imageUrl: string;
-  };
-  price: string;
-  referenceId: string;
-  category: string;
-  subCategory: string;
-  flashSale: boolean;
-  cartQuantity: number;
-  totalCost: number;
-};
+export interface TLoginValues {
+  email: string;
+  password: string;
+  confirmPassword:string
+  fullName: string;
+  phoneNumber: string;
+}

@@ -2,18 +2,53 @@ import { baseApi } from "../../api/baseApi";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation({
+    createPendingUser: builder.mutation({
       query: (userInfo) => ({
-        url: "/auth/create-account",
+        url: "/users/pending",
         method: "POST",
         body: userInfo,
       }),
     }),
-    login: builder.mutation({
+    verifyUser: builder.mutation({
       query: (userInfo) => ({
-        url: "/auth/login-account",
+        url: "/users/create",
         method: "POST",
         body: userInfo,
+      }),
+    }),
+    resendOtp: builder.mutation({
+      query: (email) => ({
+        url: "/users/resend-otp",
+        method: "POST",
+        body: email,
+      }),
+    }),
+    login: builder.mutation({
+      query: (userInfo) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: userInfo,
+      }),
+    }),
+    sendOtp: builder.mutation({
+      query: (email) => ({
+        url: "/auth/send-otp",
+        method: "POST",
+        body: email,
+      }),
+    }),
+    verifyOtp: builder.mutation({
+      query: (info) => ({
+        url: "/auth/verify-otp",
+        method: "POST",
+        body: info,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (newPass) => ({
+        url: "/auth/reset-password",
+        method: "PATCH",
+        body: newPass,
       }),
     }),
     activeUser: builder.query({
@@ -35,8 +70,13 @@ const authApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useRegisterMutation,
+  useCreatePendingUserMutation,
   useLoginMutation,
+  useSendOtpMutation,
+  useResendOtpMutation,
+  useVerifyUserMutation,
+  useResetPasswordMutation,
   useActiveUserQuery,
   useUpdateUserMutation,
+  useVerifyOtpMutation
 } = authApi;
