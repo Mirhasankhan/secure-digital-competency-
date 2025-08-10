@@ -51,9 +51,9 @@ const authApi = baseApi.injectEndpoints({
         body: newPass,
       }),
     }),
-    activeUser: builder.query({
-      query: (email) => ({
-        url: `auth/current-user?email=${email}`,
+    profile: builder.query({
+      query: () => ({
+        url: `/users/profile`,
         method: "GET",
       }),
       providesTags: ["users"],
@@ -66,17 +66,32 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["users"],
     }),
+    getQuestions: builder.query({
+      query: () => ({
+        url: `/question`,
+        method: "GET",
+      }),
+    }),
+    quizResult: builder.mutation({
+      query: (data) => ({
+        url: `/question/quiz`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
 export const {
   useCreatePendingUserMutation,
   useLoginMutation,
+  useQuizResultMutation,
   useSendOtpMutation,
   useResendOtpMutation,
   useVerifyUserMutation,
   useResetPasswordMutation,
-  useActiveUserQuery,
+  useProfileQuery,
+  useGetQuestionsQuery,
   useUpdateUserMutation,
-  useVerifyOtpMutation
+  useVerifyOtpMutation,
 } = authApi;

@@ -4,11 +4,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import { TLoginValues } from "../../types/cart.type";
 import { useAppDispatch } from "../../redux/hooks";
-import { useLoginMutation } from "../../redux/features/auth/authApi";
+import { useGetQuestionsQuery, useLoginMutation } from "../../redux/features/auth/authApi";
 import { setUser } from "../../redux/features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const { data: questionData} = useGetQuestionsQuery("");
+    console.log(questionData);
   const [loginUser, { isLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -20,30 +22,28 @@ const Login = () => {
   } = useForm<TLoginValues>();
 
   const onSubmit: SubmitHandler<TLoginValues> = async (data) => {
-    console.log(data);
+  
     try {
-      const response: any = await loginUser(data);
-      console.log(response);
-
+      const response: any = await loginUser(data);  
       if (response.data?.success) {
         toast.success("Login Successful");
 
         navigate("/overview");
         dispatch(
           setUser({
-            name: response.data.userInfo.username,
-            email: response.data.userInfo.email,
-            role: response.data.userInfo.role,
-            token: response.data.accessToken,
+            name: response.data.data?.userInfo.fullName,
+            email: response.data.data?.userInfo.email,
+            role: response.data.data?.userInfo.role,
+            token: response.data.data.accessToken,
           })
         );
-        localStorage.setItem("token", response.data?.accessToken);
+        localStorage.setItem("token", response.data?.data?.accessToken);
       } else if (response.error) {
         toast.error(response.error.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error("An unexpected error occurred.");
+     
     }
   };
 

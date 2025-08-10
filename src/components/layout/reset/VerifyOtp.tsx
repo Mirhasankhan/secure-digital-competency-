@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useVerifyOtpMutation } from "../../../redux/features/auth/authApi";
 
 const VerifyOtp = ({ setActive }: { setActive: (value: string) => void }) => {
-  const [verifyOtp] = useVerifyOtpMutation();
+  const [verifyOtp,{isLoading}] = useVerifyOtpMutation();
   const email = localStorage.getItem("email");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [otp, setOtp] = useState({
@@ -72,7 +72,7 @@ const VerifyOtp = ({ setActive }: { setActive: (value: string) => void }) => {
         </div>
         <h1 className="text-xl font-medium py-2">Verify OTP</h1>
         <p className="text-gray-600">
-          We&apos;ve sent a 6-digit verification code to
+          We&apos;ve sent a 4-digit verification code to
         </p>
         <p className="text-primary">{email}</p>
 
@@ -104,11 +104,13 @@ const VerifyOtp = ({ setActive }: { setActive: (value: string) => void }) => {
 
           <button
             onClick={handleVerify}
-            disabled={!isComplete}
+            disabled={!isComplete || isLoading}
             className={`mt-2 w-full py-2 rounded-[4px] text-white font-semibold transition 
             ${isComplete ? "bg-primary" : "bg-gray-400 cursor-not-allowed"}`}
           >
-            Verify
+            {
+                isLoading ? "Verifying...":"Verify"
+            }
           </button>
           <p className="text-gray-600">Didn&apos;t receive the code?</p>
           <p className="text-primary cursor-pointer">
