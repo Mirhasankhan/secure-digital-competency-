@@ -74,7 +74,7 @@ const { data: questionData, isLoading } = useGetQuestionsQuery("", {
   return (
     <>
       {active == "assesment" ? (
-        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "150px" }}>
+        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "150px", marginRight:"6px", marginLeft:"6px" }}>
           <div
             style={{
               background: "#ddd",
