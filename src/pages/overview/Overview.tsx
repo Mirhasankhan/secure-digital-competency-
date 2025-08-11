@@ -6,6 +6,7 @@ const Overview = () => {
   if (isLoading) {
     return "Loading...........";
   }
+  console.log(profile);
   return (
     <div className="bg-blue-400 min-h-screen bg-opacity-25 flex flex-col items-center justify-center p-16">
       <h1 className="text-2xl font-semibold md:text-5xl pb-6 text-primary">
@@ -23,7 +24,15 @@ const Overview = () => {
         recognized for your skills <br /> with official certification.
       </p>
       <Link to="/assesment">
-        <button className="text-white bg-primary px-8 py-3 rounded-xl font-medium mt-6">
+        <button
+          title={
+            profile?.data?.sanitizedUser?.isBlocked == true
+              ? "You are blocked"
+              : ""
+          }
+          disabled={profile?.data?.sanitizedUser?.isBlocked}
+          className="text-white bg-primary px-8 py-3 rounded-xl font-medium mt-6"
+        >
           Start Assesment
         </button>
       </Link>
@@ -41,6 +50,14 @@ const Overview = () => {
           <h1>{profile?.data?.sanitizedUser?.currentLevel}</h1>
         </div>
       </div>
+      <Link to="/">
+        <button
+          onClick={() => localStorage.removeItem("token")}
+          className="text-white bg-red-400 px-8 py-3 rounded-xl font-medium mt-6"
+        >
+          Logouot
+        </button>
+      </Link>
     </div>
   );
 };

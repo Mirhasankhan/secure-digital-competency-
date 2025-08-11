@@ -4,11 +4,15 @@ import {
   useQuizResultMutation,
 } from "../../redux/features/auth/authApi";
 import Result from "../../components/Result";
+import { toast } from "react-toastify";
 
 const Assesment = () => {
   const [active, setActive] = useState("assesment");
   const [testResult, setTestResult] = useState({});
-  const { data: questionData, isLoading } = useGetQuestionsQuery("");
+const { data: questionData, isLoading } = useGetQuestionsQuery("", {
+  refetchOnMountOrArgChange: true,
+});
+ 
   const [quizResult, { isLoading: isQuizLoading }] = useQuizResultMutation();
   const questions = questionData?.data || [];
 
@@ -49,11 +53,13 @@ const Assesment = () => {
     }
   };
   const handleSubmit = async () => {
-    const payload = { userAnswers };    
+    const payload = { userAnswers };
     const response = await quizResult(payload);
-    if(response.data){
-      setTestResult(response.data?.data)
-      setActive("result")
+    if (response.data) {
+      setTestResult(response.data?.data);
+      setActive("result");
+      toast.success("Quiz submitted successfully");
+      localStorage.setItem("token", response?.data?.data?.accessToken)
     }
   };
 

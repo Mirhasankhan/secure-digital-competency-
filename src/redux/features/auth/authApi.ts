@@ -29,6 +29,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: userInfo,
       }),
+      invalidatesTags:["users"]
     }),
     sendOtp: builder.mutation({
       query: (email) => ({
@@ -71,6 +72,7 @@ const authApi = baseApi.injectEndpoints({
         url: `/question`,
         method: "GET",
       }),
+      providesTags:["users"]
     }),
     quizResult: builder.mutation({
       query: (data) => ({
@@ -78,6 +80,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags:["users"]
     }),
   }),
 });
