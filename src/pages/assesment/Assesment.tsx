@@ -3,12 +3,14 @@ import {
   useGetQuestionsQuery,
   useQuizResultMutation,
 } from "../../redux/features/auth/authApi";
+import Result from "../../components/Result";
 
 const Assesment = () => {
+  const [active, setActive] = useState("assesment");
+  const [testResult, setTestResult] = useState({});
   const { data: questionData, isLoading } = useGetQuestionsQuery("");
   const [quizResult, { isLoading: isQuizLoading }] = useQuizResultMutation();
   const questions = questionData?.data || [];
-  console.log(quizResult,isQuizLoading);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<
@@ -37,8 +39,7 @@ const Assesment = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      const payload = { userAnswers };
-      console.log("Submitting answers:", JSON.stringify(payload, null, 4));
+      console.log(userAnswers);
     }
   };
 
@@ -47,9 +48,14 @@ const Assesment = () => {
       setCurrentIndex((prev) => prev - 1);
     }
   };
-  const handleSubmit = ()=>{
-    console.log("object");
-  }
+  const handleSubmit = async () => {
+    const payload = { userAnswers };    
+    const response = await quizResult(payload);
+    if(response.data){
+      setTestResult(response.data?.data)
+      setActive("result")
+    }
+  };
 
   if (isLoading) {
     return <p>Loading questions...</p>;
@@ -60,91 +66,101 @@ const Assesment = () => {
   }
 
   return (
-    <div style={{ maxWidth: "500px", margin: "auto", marginTop: "150px" }}>
-      <div
-        style={{
-          background: "#ddd",
-          borderRadius: "4px",
-          height: "10px",
-          marginBottom: "15px",
-        }}
-      >
-        <div
-          style={{
-            width: `${progress}%`,
-            background: "#4caf50",
-            height: "100%",
-            borderRadius: "4px",
-            transition: "width 0.3s ease",
-          }}
-        />
-      </div>
-      <h3>
-        Question {currentIndex + 1} of {questions.length}
-      </h3>
-      <p className="pb-6">{currentQuestion.text}</p>
-      {currentQuestion.options.map((option: any) => {
-        const selected = userAnswers.find(
-          (ans) =>
-            ans.questionId === currentQuestion._id &&
-            ans.selectedOptionId === option._id
-        );
-
-        return (
-          <button
-            key={option._id}
+    <>
+      {active == "assesment" ? (
+        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "150px" }}>
+          <div
             style={{
-              display: "block",
-              marginBottom: "8px",
-              padding: "8px",
-              fontWeight: "700",
-              width: "100%",
-              background: selected ? "lightgreen" : "white",
-              border: "1px solid #ccc",
-              cursor: "pointer",
-              borderRadius: "8px",
+              background: "#ddd",
+              borderRadius: "4px",
+              height: "10px",
+              marginBottom: "15px",
             }}
-            onClick={() => handleOptionSelect(option._id)}
           >
-            {option.text}
-          </button>
-        );
-      })}
+            <div
+              style={{
+                width: `${progress}%`,
+                background: "#4caf50",
+                height: "100%",
+                borderRadius: "4px",
+                transition: "width 0.3s ease",
+              }}
+            />
+          </div>
+          <h3>
+            Question {currentIndex + 1} of {questions.length}
+          </h3>
+          <p className="pb-6">{currentQuestion.text}</p>
+          {currentQuestion.options.map((option: any) => {
+            const selected = userAnswers.find(
+              (ans) =>
+                ans.questionId === currentQuestion._id &&
+                ans.selectedOptionId === option._id
+            );
 
-      <div style={{ marginTop: "20px", display: "flex", gap: "40px" }}>
-        <button
-          onClick={handleBack}
-          disabled={currentIndex === 0}
-          style={{ flex: 1 }}
-          className="text-primary px-4 py-1 border border-primary rounded-lg"
-        >
-          Back
-        </button>
-        {currentIndex === questions.length - 1 ? (
-          <button
-            onClick={handleSubmit}
-            style={{ flex: 1 }}
-            disabled={
-              !userAnswers.find((ans) => ans.questionId === currentQuestion._id)
-            }
-            className="bg-primary text-white px-4 py-1 border border-primary rounded-lg"
-          >
-           Submit
-          </button>
-        ) : (
-          <button
-            onClick={handleNext}
-            style={{ flex: 1 }}
-            disabled={
-              !userAnswers.find((ans) => ans.questionId === currentQuestion._id)
-            }
-            className="bg-primary text-white px-4 py-1 border border-primary rounded-lg"
-          >
-           Next
-          </button>
-        )}
-      </div>
-    </div>
+            return (
+              <button
+                key={option._id}
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  padding: "8px",
+                  fontWeight: "700",
+                  width: "100%",
+                  background: selected ? "lightgreen" : "white",
+                  border: "1px solid #ccc",
+                  cursor: "pointer",
+                  borderRadius: "8px",
+                }}
+                onClick={() => handleOptionSelect(option._id)}
+              >
+                {option.text}
+              </button>
+            );
+          })}
+
+          <div style={{ marginTop: "20px", display: "flex", gap: "40px" }}>
+            <button
+              onClick={handleBack}
+              disabled={currentIndex === 0}
+              style={{ flex: 1 }}
+              className="text-primary px-4 py-1 border border-primary rounded-lg"
+            >
+              Back
+            </button>
+            {currentIndex === questions.length - 1 ? (
+              <button
+                onClick={handleSubmit}
+                style={{ flex: 1 }}
+                disabled={
+                  !userAnswers.find(
+                    (ans) => ans.questionId === currentQuestion._id
+                  )
+                }
+                className="bg-primary text-white px-4 py-1 border border-primary rounded-lg"
+              >
+                {isQuizLoading ? "Submitting...." : "Submit"}
+              </button>
+            ) : (
+              <button
+                onClick={handleNext}
+                style={{ flex: 1 }}
+                disabled={
+                  !userAnswers.find(
+                    (ans) => ans.questionId === currentQuestion._id
+                  )
+                }
+                className="bg-primary text-white px-4 py-1 border border-primary rounded-lg"
+              >
+                Next
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <Result testResult={testResult}></Result>
+      )}
+    </>
   );
 };
 

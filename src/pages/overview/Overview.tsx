@@ -7,7 +7,7 @@ const Overview = () => {
     return "Loading...........";
   }
   return (
-    <div className="bg-blue-400 bg-opacity-25 flex flex-col items-center justify-center p-16">
+    <div className="bg-blue-400 min-h-screen bg-opacity-25 flex flex-col items-center justify-center p-16">
       <h1 className="text-2xl font-semibold md:text-5xl pb-6 text-primary">
         Welcome,{profile?.data?.sanitizedUser?.fullName}
       </h1>
