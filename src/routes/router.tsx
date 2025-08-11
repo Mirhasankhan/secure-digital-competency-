@@ -7,7 +7,7 @@ import Register from "../pages/register/Register";
 import VerifyEmail from "../pages/verify-email/VerifyEmail";
 import ResetPassword from "../pages/reset-password/ResetPassword";
 import Overview from "../pages/overview/Overview";
-
+import UserRoutes from "./UserRoutes";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +20,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/assesment",
-        element: <Assesment></Assesment>,
+        element: (
+          <UserRoutes>
+            <Assesment></Assesment>
+          </UserRoutes>
+        ),
       },
       {
         path: "/register",
@@ -36,7 +40,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/overview",
-        element: <Overview></Overview>,
+        element: (
+          <UserRoutes>
+            <Overview></Overview>
+          </UserRoutes>
+        ),
       },
     ],
   },

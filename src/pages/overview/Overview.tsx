@@ -1,12 +1,25 @@
 import { Link } from "react-router-dom";
 import { useProfileQuery } from "../../redux/features/auth/authApi";
+import { useAppDispatch } from "../../redux/hooks";
+import { setUser } from "../../redux/features/auth/authSlice";
 
 const Overview = () => {
   const { data: profile, isLoading } = useProfileQuery("");
+  const dispatch = useAppDispatch();
   if (isLoading) {
     return "Loading...........";
   }
-  console.log(profile);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(
+      setUser({
+        name: null,
+        email: null,
+        role: null,
+        token: null,
+      })
+    );
+  };
   return (
     <div className="bg-blue-400 min-h-screen bg-opacity-25 flex flex-col items-center justify-center p-16">
       <h1 className="text-2xl font-semibold md:text-5xl pb-6 text-primary">
@@ -52,10 +65,10 @@ const Overview = () => {
       </div>
       <Link to="/">
         <button
-          onClick={() => localStorage.removeItem("token")}
+          onClick={() => handleLogout()}
           className="text-white bg-red-400 px-8 py-3 rounded-xl font-medium mt-6"
         >
-          Logouot
+          Logout
         </button>
       </Link>
     </div>
