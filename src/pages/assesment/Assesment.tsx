@@ -72,9 +72,9 @@ const { data: questionData, isLoading } = useGetQuestionsQuery("", {
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       {active == "assesment" ? (
-        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "150px", marginRight:"6px", marginLeft:"6px" }}>
+        <div style={{ maxWidth: "500px", minWidth:"430px", margin: "auto", marginTop: "150px", marginRight:"6px", marginLeft:"6px" }}>
           <div
             style={{
               background: "#ddd",
@@ -166,7 +166,7 @@ const { data: questionData, isLoading } = useGetQuestionsQuery("", {
       ) : (
         <Result testResult={testResult}></Result>
       )}
-    </>
+    </div>
   );
 };
 
